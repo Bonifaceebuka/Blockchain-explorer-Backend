@@ -32,7 +32,7 @@ func connectDB() {
 
 func LoadEnv() {
 	// err := godotenv.Load(".env")
-	err := godotenv.Load()
+	err := godotenv.Load() //
 	if err != nil {
 		log.Fatal("Error: unable to load the .env file")
 	}
