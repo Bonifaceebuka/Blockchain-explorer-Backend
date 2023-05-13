@@ -5,17 +5,9 @@ import (
 	"log"
 	"math/big"
 
-	"github.com/Bonifaceebuka/Blockchain-explorer-Backend/config"
-	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/Bonifaceebuka/Blockchain-explorer-Backend/helpers"
 	"github.com/gofiber/fiber/v2"
 )
-
-var infuraConnection *ethclient.Client
-
-func init() {
-	infuraConnection = config.GetInfuraConnection()
-	config.LoadEnv()
-}
 
 type Block struct {
 	BlockId       int    `json:"block_id"`
@@ -24,36 +16,22 @@ type Block struct {
 	BlockTotalTnx int    `json:"block_total_tnx"`
 }
 
-func Home(c *fiber.Ctx) error {
-	c.Status(200)
-
-	return c.JSON(fiber.Map{
-		"msg": "API service is fully up!",
-	})
-
-}
-
 func GetBlockInfo(c *fiber.Ctx) error {
 	block_id := c.Params("block_id")
-	newBigInt := new(big.Int)
-	newBigInt, ok := newBigInt.SetString(block_id, 10)
+	response := helpers.GetBlockDetail(block_id)
+	statusCode := 0
 
-	if !ok {
-
+	switch response {
+	case 1:
+		statusCode = 500
+	case 2:
+		statusCode = 500
+	default:
+		statusCode = 500
 	}
-
-	blockData, err := infuraConnection.BlockByNumber(context.Background(), newBigInt)
-
-	if err != nil {
-		c.Status(500)
-		return c.JSON(fiber.Map{
-			"msg": "Unable to fetch the latest block information!",
-		})
-
-	}
-
+	c.Status(statusCode)
 	return c.JSON(fiber.Map{
-		"blockData": blockData.Transactions(),
+		"data": response,
 	})
 }
 

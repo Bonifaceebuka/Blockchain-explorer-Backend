@@ -8,8 +8,10 @@ import (
 func Router(router *fiber.App) {
 
 	router.Get("/", controllers.Home)
-	router.Get("/getblockinfo/:block_id", controllers.GetBlockInfo)
-	router.Get("/getblocks", controllers.GetBlocks)
+	router.Get("/getBlockInfo/:block_id", controllers.GetBlockInfo)
+	router.Get("/getBlocks", controllers.GetBlocks)
+	router.Get("/getTransactions", controllers.GetTransactions)
+	router.Get("/getSearchResults", controllers.GetSearchResults)
 	// router.Post("/signin", controllers.Signin)
 	// router.Use(middlewares.IsAuthenticate)
 }
