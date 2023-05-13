@@ -2,32 +2,25 @@ package config
 
 import (
 	"log"
+	"os"
 
+	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/joho/godotenv"
 )
 
-// databaseConnection := 'null'
+var infuraConn *ethclient.Client
 
-func connectDB() {
+func connectInfura() *ethclient.Client {
+	LoadEnv()
+	INFURA_GOERLI_KEY := os.Getenv("INFURA_GOERLI_KEY")
+	infuraConnection, err := ethclient.Dial(INFURA_GOERLI_KEY)
 
-	// dbConnection, err := gorm.Open("mysql", dsn(dbname))
+	if err != nil {
+		log.Fatal("Unable to connect to the chosen ethereum network: ", err)
+	}
 
-	// // handle error
-	// if err != nil {
-	// 	panic(err)
-	// }
-
-	// // err = dbConnection.Ping()
-	// databaseConnection = dbConnection
-
-	// // if err != nil {
-	// // 	fmt.Print("Unable to migrate DB tables")
-	// // }
-	// // defer dbConnection.Close()
-	// if err != nil {
-	// 	panic("Unable to open database")
-	// }
-	// return databaseConnection
+	infuraConn = infuraConnection
+	return infuraConn
 }
 
 func LoadEnv() {
@@ -38,7 +31,7 @@ func LoadEnv() {
 	}
 }
 
-func GetDBConnection() {
-	// connectDB()
-	// return databaseConnection
+func GetInfuraConnection() *ethclient.Client {
+	connectInfura()
+	return infuraConn
 }
