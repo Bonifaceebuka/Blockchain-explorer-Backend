@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/Bonifaceebuka/Blockchain-explorer-Backend/helpers"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -26,6 +27,8 @@ func GetTransactions(c *fiber.Ctx) error {
 func GetSearchResults(c *fiber.Ctx) error {
 	searchType := c.Query("search_type")
 	searchValue := c.Query("search_value")
+	var response any
+	statusCode := 0
 
 	if searchType == "" {
 		c.Status(302)
@@ -43,23 +46,32 @@ func GetSearchResults(c *fiber.Ctx) error {
 
 	switch searchType {
 	case "block":
-		fmt.Println("one")
+		response = helpers.GetBlockDetail(searchValue)
+		switch response {
+		case 1:
+			statusCode = 500
+			response = helpers.GetMessage("cant_convert_value")
+		case 2:
+			statusCode = 500
+			response = helpers.GetMessage("fetch_a_block")
+		}
+
 	case "address":
 		fmt.Println("two")
 	case "hash":
-		fmt.Println("three")
+		response = helpers.GetTnxByHash(searchValue)
+		switch response {
+		case 3:
+			statusCode = 200
+			response = helpers.GetMessage("tnx_is_pending")
+		case 4:
+			statusCode = 302
+			response = helpers.GetMessage("invalid_tnx_hash")
+		}
 	}
-	blockData, err := infuraConnection.BlockByNumber(context.Background(), nil)
 
-	if err != nil {
-		c.Status(500)
-		return c.JSON(fiber.Map{
-			"msg": "Unable to fetch the latest block information!",
-		})
-
-	}
-
+	c.Status(statusCode)
 	return c.JSON(fiber.Map{
-		"latest_transactions": blockData.Transactions(),
+		"response": response,
 	})
 }

@@ -24,14 +24,14 @@ func GetBlockInfo(c *fiber.Ctx) error {
 	switch response {
 	case 1:
 		statusCode = 500
+		response = helpers.GetMessage("fetch_latest_block")
 	case 2:
 		statusCode = 500
-	default:
-		statusCode = 500
+		response = helpers.GetMessage("fetch_a_block")
 	}
 	c.Status(statusCode)
 	return c.JSON(fiber.Map{
-		"data": response,
+		"response": response,
 	})
 }
 
