@@ -49,3 +49,19 @@ func GetTnxByHash(hash string) any {
 
 	return tnx
 }
+
+// func GetTnxByAddress(address string) any {
+// 	covalentBaseUrl := "https://api.covalenthq.com/v1/{chainName}/transaction_v2/{txHash}/"
+// 	_, err := hexutil.Decode(address)
+// 	if err != nil {
+// 		return invalidAddress
+// 	}
+// 	infuraConnection := config.GetInfuraConnection()
+// 	tnx, isPending, _ := infuraConnection.TransactionByAddress(context.Background(), common.HexToAddress(address))
+
+// 	if isPending {
+// 		return tnxIsPending
+// 	}
+
+// 	return tnx
+// }
